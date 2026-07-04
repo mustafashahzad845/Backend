@@ -58,3 +58,16 @@
 // }
 // })
 // })()
+
+import http from "http"
+
+const PORT = 4000
+
+const server = http.createServer((request , response)=>{
+response.end("Han bhai..")
+})
+
+server.listen(PORT , ()=>{
+    console.log("Server running");
+    
+})
