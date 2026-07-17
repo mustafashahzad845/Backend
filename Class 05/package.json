@@ -1,0 +1,17 @@
+{
+  "name": "class-05",
+  "version": "1.0.0",
+  "description": "",
+  "main": "express.js",
+  "type": "module",
+  "scripts": {
+    "start": "node express.js",
+    "dev": "nodemon express.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
