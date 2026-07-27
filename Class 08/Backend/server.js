@@ -2,6 +2,7 @@ import express from "express"
 import mongoose from "mongoose"
 import cors from "cors"
 import stdModel from "./Models/stdSchema.js"
+import userModel from "./Models/userSchema.js"
 
 
 const app = express()
@@ -13,7 +14,6 @@ app.use(cors())
 app.listen(PORT, _=>console.log(`Server running on http://localhost:${PORT}`))
 
 import {setServers} from "node:dns/promises"
-import { log } from "node:console"
 setServers(["8.8.8.8" , "1.1.1.1"])
 const URI = `mongodb+srv://muhammad:admin@cluster0.btwmrtq.mongodb.net/?appName=Cluster0`
 mongoose.connect(URI)
@@ -28,14 +28,14 @@ response.send("Server running..")
 
 app.post("/create-user" , async (request , response)=>{
 // console.log(typeof request.body);
-await stdModel.create(request.body)
+await userModel.create(request.body)
     response.send("user created")
 
 })
 
 app.post("/update-specific" , async (request , response)=>{
     
-await stdModel.findByIdAndUpdate(request.body._id , request.body)
+await us.findByIdAndUpdate(request.body._id , request.body)
 response.send('update hogaya..')
 
 })

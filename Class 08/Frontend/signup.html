@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+    <link rel="stylesheet" href="./signup.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="signup-box">
+
+        <div class="logo">
+            <h2>Aplinode</h2>
+        </div>
+
+        <h1>Create Account</h1>
+        <p class="subtitle">
+            Sign up to get started
+        </p>
+
+
+        <div>
+
+            <div class="input-group">
+                <label>First Name</label>
+                <input id="firstName"  type="text" placeholder="Enter your first name">
+            </div>
+
+
+            <div class="input-group">
+                <label>Last Name</label>
+                <input id="lastName" type="text" placeholder="Enter your lastName">
+            </div>
+
+
+            <div class="input-group">
+                <label>Email</label>
+                <input id="email" type="email" placeholder="Enter your email">
+            </div>
+
+
+            <div class="input-group">
+                <label>Password</label>
+                <input id="password" type="password" placeholder="Create Password">
+            </div>
+
+
+            <div class="terms">
+                <label>
+                    <input type="checkbox">
+                    I agree with terms & conditions
+                </label>
+            </div>
+
+
+            <button type="submit" onclick="signupHandler()">
+                Create Account
+            </button>
+
+        </div>
+
+
+        <div class="login-link">
+            Already have an account?
+            <a href="./login.html">
+                Login
+            </a>
+        </div>
+
+
+    </div>
+
+</div>
+
+
+</body>
+<script type="module" src="./signup.js"></script>
+</html>
