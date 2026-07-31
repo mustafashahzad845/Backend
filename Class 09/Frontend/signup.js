@@ -1,3 +1,17 @@
+const validateUser = (() =>{
+    const userId = localStorage.getItem("user")
+    console.log(userId);
+    
+
+if(userId){
+// user login nhi hai
+location.replace("./dashboard.html")
+return
+}
+
+})()
+
+
 const signupHandler = async ()=>{
     const firstName = document.getElementById("firstName").value
 const lastName = document.getElementById("lastName").value
