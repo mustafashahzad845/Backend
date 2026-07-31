@@ -5,6 +5,9 @@ import cors from "cors"
 const app = express()
 const PORT = 4000
 
+
+app.use(express.json())
+app.use(cors())
 app.listen(PORT, ()=>console.log(`server runnig on https:localhost:${PORT}`))
 
 
@@ -22,9 +25,18 @@ mongoose.connect(URI)
 import userModel from "./Models/userSchema.js"
 
 
-app.post("/create-user" ,async (req, res)=>{
+app.post("/signup-user" ,async (req, res)=>{
 // userModel.create(req.body)
-console.log(req.body);
+// console.log(req.body);
+
+userModel.create(req.body)
+
+res.json(
+    {
+        message : "signup successfully",
+        status : true
+    }
+)
 
 })
 
