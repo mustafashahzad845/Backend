@@ -45,14 +45,14 @@ app.get("/get-all-users" , async  (req , res)=>{
 console.log(req.query.userId);
 
 if (req.query.userId) {
- //single fetch 
+//  single fetch 
  const singleUserFind = await userModel.findOne({_id : req.query.userId})  
  res.json({
     maessage : `${req.query.userId} ye wala user mil gaya`,
     data : singleUserFind
  })
 }else{
-    //fetch all
+    // fetch all
         const allUsers = await  userModel.find() 
  res.json(
     {
@@ -65,8 +65,13 @@ if (req.query.userId) {
 
 
 
-//  console.log({_id : req.query.userId});
+ console.log({_id : req.query.userId});
  
 })
 
-// app.post("/create" , )
+app.post("/login-user" , (request , response)=>{
+
+const {email , password} = request.body 
+
+})
+

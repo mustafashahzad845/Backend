@@ -55,6 +55,7 @@ console.log(res.status);
 
 if(res.status){
 alert(res.message)
+location.replace("./index.html")
 return
 }
 
