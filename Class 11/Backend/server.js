@@ -1,63 +1,145 @@
 import express from "express";
-import mongoose from "mongoose";
 import cors from "cors";
+import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 import { setServers } from "node:dns/promises";
+import StudentModel from "./models/member.js";
+
+setServers(["8.8.8.8", "1.1.1.1"]);
+dotenv.config();
+
+const URI = process.env.MONGODB_URI
+const PORT = 4000;
+
+mongoose.connect(URI).then((res) => console.log("MongoDB connected"));
 
 const app = express();
-const PORT = 4000;
 
 app.use(express.json());
 app.use(cors());
-app.listen(PORT, () => console.log(`server runnig on https:localhost:${PORT}`));
 
-setServers(["8.8.8.8", "1.1.1.1"]);
-const URI = `mongodb+srv://muhammad:admin@cluster0.btwmrtq.mongodb.net/?appName=Cluster0`;
+// Routes
 
-mongoose.connect(URI);
-// .then((res)=>console.log(res))
-// .then((err)=>console.log(err))
-
-// Model Import
-import userModel from "./Models/userSchema.js";
-
-app.post("/signup-user", async (req, res) => {
-  // userModel.create(req.body)
-  console.log(req.body);
-
-return
-
- const createUser =  await userModel.create(req.body);
-
-  res.json({
-    message: "signup successfully",
+app.get("/", (request, response) => {
+  response.json({
+    message: "Server is successfully running...",
+    body: null,
     status: true,
   });
 });
 
-app.get("/get-all-users", async (req, res) => {
-  console.log(req.query.userId);
+app.post("/api/signup", async (request, response) => {
+  try {
+    const { fullName, email, password } = request.body;
 
-  if (req.query.userId) {
-    //  single fetch
-    const singleUserFind = await userModel.findOne({ _id: req.query.userId });
-    res.json({
-      maessage: `${req.query.userId} ye wala user mil gaya`,
-      data: singleUserFind,
+    if (!fullName || !email || !password) {
+      response.json({
+        message: "Required fields are missing",
+        body: null,
+        status: false,
+      });
+      return;
+    }
+
+    const hashPassword = await bcrypt.hash(password, 10);
+    console.log(hashPassword);
+
+    const obj = {
+      ...request.body,
+      password: hashPassword,
+    };
+
+    //Email Already Exist
+    const emailExist = await StudentModel.findOne({ email });
+    console.log(emailExist);
+
+    if (emailExist) {
+      response.json({
+        message: "Email already exist",
+        body: null,
+        status: false,
+      });
+      return;
+    }
+
+    const userData = await StudentModel.create(obj);
+    console.log(userData);
+
+    response.json({
+      message: "User Created",
+      body: null,
+      status: true,
     });
-  } else {
-    // fetch all
-    const allUsers = await userModel.find();
-    res.json({
-      message: "All users data",
-      data: allUsers,
+  } catch (error) {
+    response.json({
+      message: error.message,
+      body: null,
+      status: false,
+    });
+  }
+});
+
+//Login API
+app.post("/api/login", async (request, response) => {
+  const { email, password } = request.body;
+
+  if (!email || !password) {
+    response.json({
+      message: "Required fields are missing",
+      body: null,
+      status: false,
+    });
+    return;
+  }
+
+  const findUser = await StudentModel.findOne({ email });
+
+  if (!findUser) {
+    response.json({
+      message: "User not found",
+      body: null,
+      status: false,
+    });
+    return;
+  }
+
+  const comparePassword = await bcrypt.compare(password, findUser.password);
+  console.log(comparePassword, "comparePassword");
+
+  if (!comparePassword) {
+    response.json({
+      message: "invalid email or password",
+      body: null,
+      status: false,
     });
   }
 
-  console.log({ _id: req.query.userId });
+
+  const jwtToken = jwt.sign({
+    _id : findUser._id , 
+    fullName : findUser.fullName,
+    email : findUser.email
+  } , process.env.JWT_Signature_Key)
+
+  // console.log(jwtToken);
+  localStorage.setItem("jwtToken", jwtToken)
+
+response.json({
+  message : "Login Successfully",
+  status : true,
+})
+
+  // response.json({
+  //   message : "User found",
+  //   status : true,
+
+  // })
 });
 
-app.post("/login-user", (request, response) => {
-  const { email, password } = request.body;
-});
+// Server running and listening
+
+app.listen(PORT, () =>
+  console.log(`Server running on http://localhost:${PORT}`),
+);

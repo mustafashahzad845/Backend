@@ -1,13 +1,16 @@
+import BASE_URL from "./congif.js";
+    // const signupBtn = document.getElementById("signupBtn")
+// signupBtn.addEventListener("click", "submit")
 const validateUser = (() =>{
     const userId = localStorage.getItem("user")
     console.log(userId);
     
 
-if(userId){
+// if(userId){
 // user login nhi hai
-location.replace("./dashboard.html")
-return
-}
+// location.replace("./dashboard.html")
+// return
+// }
 
 })()
 
@@ -23,11 +26,23 @@ if (!firstName || !lastName || !email || !password) {
     alert("Required fileds are missing")
     return
 }
-
-const allusers = await fetch("http://localhost:4000/get-all-users")
+const obj = {
+    firstName,
+lastName,
+email,
+password
+}
+const res = await fetch(`${BASE_URL}/api/signup` , {
+    method : "POST" , 
+    headers : {
+        "Content-Type" : "application/json"
+    },body : JSON.stringify(obj)
+})
 .then(res=>res.json())
-console.log(allusers.data);
+// console.log(allusers.data);
+console.log(res);
 
+return
 const isUserExist = allusers.data.find(
     (singleUser)=>{
 if(singleUser.email === email){
