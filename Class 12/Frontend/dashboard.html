@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Todos | Aplinode</title>
+    <link rel="stylesheet" href="./dashboard.css">
+</head>
+<body>
+
+    <div class="todo-container">
+
+        <div class="todo-box">
+
+            <div class="logo">
+                <h2>Aplinode</h2>
+                <p>My Todo List</p>
+                <p id="userGreetPara"></p>
+            </div>
+
+            <!-- Add Todo -->
+            <div class="add-todo">
+                <input type="text" id="todo-input" placeholder="Add a new task...">
+                <button onclick="addTodo()">Add</button>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters">
+                <button class="filter active">All</button>
+                <button class="filter">Active</button>
+                <button class="filter">Completed</button>
+            </div>
+
+            <!-- Todo List -->
+            <ul class="todo-list">
+
+                <li class="todo-item">
+                    <label class="todo-label">
+                        <input type="checkbox" checked>
+                        <span>Complete project report</span>
+                    </label>
+                    <span class="delete-btn">&#10005;</span>
+                </li>
+
+                <li class="todo-item">
+                    <label class="todo-label">
+                        <input type="checkbox">
+                        <span>Buy groceries for the week</span>
+                    </label>
+                    <span class="delete-btn">&#10005;</span>
+                </li>
+
+                <li class="todo-item">
+                    <label class="todo-label">
+                        <input type="checkbox">
+                        <span>Reply to client emails</span>
+                    </label>
+                    <span class="delete-btn">&#10005;</span>
+                </li>
+
+                <li class="todo-item">
+                    <label class="todo-label">
+                        <input type="checkbox" checked>
+                        <span>Morning workout session</span>
+                    </label>
+                    <span class="delete-btn">&#10005;</span>
+                </li>
+
+                <li class="todo-item">
+                    <label class="todo-label">
+                        <input type="checkbox">
+                        <span>Prepare presentation slides</span>
+                    </label>
+                    <span class="delete-btn">&#10005;</span>
+                </li>
+
+            </ul>
+
+            <!-- Footer -->
+            <div class="todo-footer">
+                <p><span id="remaining">3</span> tasks remaining</p>
+                <a href="./index.html" onclick="logoutFunctionality()">Logout</a>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+<script type="module" src="./dashboard.js"></script>
+</html>
