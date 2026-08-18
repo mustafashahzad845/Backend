@@ -1,0 +1,14 @@
+{
+  "name": "all-backend-topics-practice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+"start:dev": "nodemon app.js"
+  },
+  "keywords": [],
+  "type": "module",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
