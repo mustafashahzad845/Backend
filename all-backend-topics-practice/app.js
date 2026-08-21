@@ -62,8 +62,6 @@
 
 // dotenv.config();
 
-
-
 // const server = http.createServer((request, response) => {
 //   if (request.url===  "/") {
 //     response.end("Server running..");
@@ -102,25 +100,71 @@
 //   console.log(`server running on localhost:${process.env.PORT}`),
 // );
 
-
-import { dummyApi } from "./config.js"; 
+import { dummyApi } from "./config.js";
 import dotenv from "dotenv";
 import fs from "fs";
 dotenv.config();
-import express from "express"
-const app = express()
-const PORT = process.env.PORT
-app.listen(PORT, ()=>console.log(`Server is running on lovalhost:${PORT}`))
+import express from "express";
+const app = express();
+const PORT = process.env.PORT;
+app.listen(PORT, () => console.log(`Server is running on localhost:${PORT}`));
 
-app.get("/" , (request , response)=>{
-response.end(`Express Server running..`)
+app.get("/", (request, response) => {
+  response.end(`Express Server running..`);
+});
+
+app.get("/api", (request, response) => {
+  response.send(dummyApi);
+});
+
+app.get("/company", (request, response) => {
+  response.send("Aplinode Company hai tech ki");
+});
+
+app.use(express.json());
+
+app.post("/api/create-user", (request, response) => {
+  console.log(request.body, "request.body");
+
+  // if(fs.existsSync("./users.txt")){
+  // //pehla user nhi hai
+  // }else{
+  //   // pehla user hai
+
+  // }
+
+  const { email, pasword, fullName } = request.body;
+  console.log(email, fullName, pasword);
+
+  if (!email || !pasword || !fullName) {
+    response.json({
+      status: false,
+      message: "required fields are missing",
+      data: null,
+    });
+    return;
+  }
+
+  fs.writeFileSync("./users.txt", JSON.stringify(request.body));
+  response.json({
+    status: true,
+    message: "User created",
+    data: request.body,
+  });
+});
+
+app.put("/api/edit-user" , (request , response)=>{
+response.send("User Edited")
+// const readFile = fs.readFileSync("./users.txt" , "utf-8")
+// console.log(readFile);
+
+// response.json({
+//   status : true,
+//   message : "User updated",
+//   data : readFile
+// })
 })
 
-app.get("/api" , (request , response)=>{
-
-response.send(dummyApi)
-})
-
-app.get("/company" , (request , response)=>{
-response.send("Aplinode Company hai tech ki")
+app.delete("/api/delete-user" , (request , response)=>{
+response.send("User deleted")
 })
