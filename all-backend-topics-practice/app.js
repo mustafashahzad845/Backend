@@ -171,68 +171,103 @@ app.use(express.json());
 // // })
 
 app.post("/api/signup", (request, response) => {
-  // console.log(request.body);
-
   const { email, password, fullName } = request.body;
   if (!email || !password || !fullName) {
     response.json({
       message: "required fileds are missing",
-      status : false,
-      data : null
+      status: false,
+      data: null,
     });
     return;
   }
 
-const userObj = {
+  const userObj = {
     email,
     password,
-    fullName
-  }
+    fullName,
+  };
 
-const istUserExist = existsSync("./users.txt")
+  const istUserExist = existsSync("./users.txt");
 
-  if(istUserExist){
-//first user nhi hai
-const allUsers = JSON.parse(fs.readFileSync("./users.txt" , "utf-8"))
-  // response.end("first user nhi hai");
+  if (istUserExist) {
+    //first user nhi hai
+    const allUsers = JSON.parse(fs.readFileSync("./users.txt", "utf-8"));
+    // response.end("first user nhi hai");
 
-  const isUserExist = allUsers.find(
-    (user)=>{
-if(userObj.email === user.email){
-return true
-}
+    const isUserExist = allUsers.find((user) => {
+      if (userObj.email === user.email) {
+        return true;
+      }
+    });
+
+    if (isUserExist) {
+      return response.json({
+        message: "User already exist",
+        status: false,
+        data: null,
+      });
     }
-  )
 
-  if(isUserExist){
+    allUsers.push(userObj);
+    fs.writeFileSync("./users.txt", JSON.stringify(allUsers));
+    response.json({
+      message: "User created",
+      status: true,
+      data: userObj,
+    });
+  } else {
+    // first user
+
+    fs.writeFileSync("./users.txt", JSON.stringify([userObj]));
+    console.log(userObj, "userobj");
+
+    response.json({
+      message: "User created first user hai",
+      status: true,
+      data: userObj,
+    });
+    return;
+  }
+});
+
+app.post("/api/login", (request, response) => {
+  const body = request.body;
+  if(!body.email || !body.password){
 return response.json({
-  message : "User already exist",
+  message : "Required fields are missing",
+  status : false,
+  data : null
+})
+  }
+  const allUsers = JSON.parse(fs.readFileSync("./users.txt", "utf-8"));
+  console.log(allUsers);
+  
+  const isUserExist = allUsers.find((obj) => {
+    if (obj.email === body.email) {
+      return true;
+    }
+  });
+
+  if(!isUserExist){
+return response.json({
+  message : "user not found",
   status : false,
   data : null
 })
   }
 
-  allUsers.push(userObj)
-  fs.writeFileSync("./users.txt", JSON.stringify(allUsers))
-  response.json({
-    message : "User created",
-    status : true,
-    data : userObj
-  })
-
-  }else{
-    // first user
-    
-  fs.writeFileSync("./users.txt", JSON.stringify([userObj]))
-console.log(userObj , "userobj");
-
-  response.json({
-    message : "User created first user hai",
-    status : true,
-    data : userObj
-  });
-  return
+  if(isUserExist.password !== body.password){
+return response.json({
+message : "Invalid Email or password",
+status : false,
+data : null
+})
   }
 
-  
+  response.json({
+message : "Login Successfully",
+status : true,
+data : isUserExist
+})
+
 });
