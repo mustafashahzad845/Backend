@@ -173,13 +173,12 @@ app.use(express.json());
 app.post("/api/signup", (request, response) => {
   const { email, password, fullName } = request.body;
   if (!email || !password || !fullName) {
-    response.json({
+     return response.json({
       message: "required fileds are missing",
       status: false,
       data: null,
     });
-    return;
-  }
+    }
 
   const userObj = {
     email,
@@ -192,8 +191,7 @@ app.post("/api/signup", (request, response) => {
   if (istUserExist) {
     //first user nhi hai
     const allUsers = JSON.parse(fs.readFileSync("./users.txt", "utf-8"));
-    // response.end("first user nhi hai");
-
+  
     const isUserExist = allUsers.find((user) => {
       if (userObj.email === user.email) {
         return true;
@@ -240,7 +238,7 @@ return response.json({
 })
   }
   const allUsers = JSON.parse(fs.readFileSync("./users.txt", "utf-8"));
-  console.log(allUsers);
+  // console.log(allUsers);
   
   const isUserExist = allUsers.find((obj) => {
     if (obj.email === body.email) {
@@ -271,3 +269,32 @@ data : isUserExist
 })
 
 });
+
+app.put("/edit-user" , (request , response)=>{
+const body = request.body
+const allUsers = JSON.parse(fs.readFileSync("./users.txt"))
+const specificUser = allUsers.findIndex(
+  (user)=>{
+if(user.email === body.email){
+return true
+}
+  }
+) 
+
+if(specificUser === -1){
+return response.json({
+  message : "user not found",
+  status : false,
+  data : null
+})
+}
+
+const updateObj = [
+  ...allUsers[specificUser], //old aaray
+  ...body // new array
+]
+
+// allUsers.splice(us)
+
+
+})
