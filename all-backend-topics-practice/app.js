@@ -102,9 +102,10 @@
 
 import { dummyApi } from "./config.js";
 import dotenv from "dotenv";
-import fs from "fs";
+import fs, { existsSync, stat } from "fs";
 dotenv.config();
 import express from "express";
+import { isBoxedPrimitive } from "util/types";
 const app = express();
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server is running on localhost:${PORT}`));
@@ -123,48 +124,115 @@ app.get("/company", (request, response) => {
 
 app.use(express.json());
 
-app.post("/api/create-user", (request, response) => {
-  console.log(request.body, "request.body");
+// app.post("/api/create-user", (request, response) => {
+// console.log(request.body, "request.body");
 
-  // if(fs.existsSync("./users.txt")){
-  // //pehla user nhi hai
-  // }else{
-  //   // pehla user hai
+// if(fs.existsSync("./users.txt")){
+// //pehla user nhi hai
+// }else{
+//   // pehla user hai
 
-  // }
+// }
 
-  const { email, pasword, fullName } = request.body;
-  console.log(email, fullName, pasword);
+//   const { email, pasword, fullName } = request.body;
+//   console.log(email, fullName, pasword);
 
-  if (!email || !pasword || !fullName) {
+//   if (!email || !pasword || !fullName) {
+//     response.json({
+//       status: false,
+//       message: "required fields are missing",
+//       data: null,
+//     });
+//     return;
+//   }
+
+//   fs.writeFileSync("./users.txt", JSON.stringify(request.body));
+//   response.json({
+//     status: true,
+//     message: "User created",
+//     data: request.body,
+//   });
+// });
+
+// app.put("/api/edit-user" , (request , response)=>{
+// // response.send("User Edited")
+// // const readFile = fs.readFileSync("./users.txt" , "utf-8")
+// // console.log(readFile);
+
+// // response.json({
+// //   status : true,
+// //   message : "User updated",
+// //   data : readFile
+// // })
+// })
+
+// // app.delete("/api/delete-user" , (request , response)=>{
+// // response.send("User deleted")
+// // })
+
+app.post("/api/signup", (request, response) => {
+  // console.log(request.body);
+
+  const { email, password, fullName } = request.body;
+  if (!email || !password || !fullName) {
     response.json({
-      status: false,
-      message: "required fields are missing",
-      data: null,
+      message: "required fileds are missing",
+      status : false,
+      data : null
     });
     return;
   }
 
-  fs.writeFileSync("./users.txt", JSON.stringify(request.body));
+const userObj = {
+    email,
+    password,
+    fullName
+  }
+
+const istUserExist = existsSync("./users.txt")
+
+  if(istUserExist){
+//first user nhi hai
+const allUsers = JSON.parse(fs.readFileSync("./users.txt" , "utf-8"))
+  // response.end("first user nhi hai");
+
+  const isUserExist = allUsers.find(
+    (user)=>{
+if(userObj.email === user.email){
+return true
+}
+    }
+  )
+
+  if(isUserExist){
+return response.json({
+  message : "User already exist",
+  status : false,
+  data : null
+})
+  }
+
+  allUsers.push(userObj)
+  fs.writeFileSync("./users.txt", JSON.stringify(allUsers))
   response.json({
-    status: true,
-    message: "User created",
-    data: request.body,
+    message : "User created",
+    status : true,
+    data : userObj
+  })
+
+  }else{
+    // first user
+    
+  fs.writeFileSync("./users.txt", JSON.stringify([userObj]))
+console.log(userObj , "userobj");
+
+  response.json({
+    message : "User created first user hai",
+    status : true,
+    data : userObj
   });
+  return
+  }
+
+  
 });
-
-app.put("/api/edit-user" , (request , response)=>{
-response.send("User Edited")
-// const readFile = fs.readFileSync("./users.txt" , "utf-8")
-// console.log(readFile);
-
-// response.json({
-//   status : true,
-//   message : "User updated",
-//   data : readFile
-// })
-})
-
-app.delete("/api/delete-user" , (request , response)=>{
-response.send("User deleted")
-})
