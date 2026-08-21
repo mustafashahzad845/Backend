@@ -56,48 +56,71 @@
 
 // })()
 
+// import dotenv from "dotenv";
+// import http from "http";
+// import fs from "fs";
+
+// dotenv.config();
+
+
+
+// const server = http.createServer((request, response) => {
+//   if (request.url===  "/") {
+//     response.end("Server running..");
+//   } else if (request.url === "/create-user") {
+//     response.end("User created..");
+//     // console.log(userObj);
+// let userObj = {
+//   email: "mustafa@gmail.com",
+//   password: 123456,
+// };
+//     fs.writeFileSync("./user.txt", JSON.stringify(userObj));
+//   } else if (request.url === "/read-user") {
+// if(!fs.existsSync("./user.txt")){
+// response.end("user nhi hai koi bhi")
+// return
+// }
+
+//     const readUser = fs.readFileSync("./user.txt", "utf-8");
+//     response.end(readUser);
+//   } else if (request.url === "/update-user") {
+// let userObj = {
+//   email: "shafay@gmail.com",
+//   password: 123456,
+// };
+//     fs.writeFileSync("./user.txt", JSON.stringify(userObj));
+//     response.end("user updated");
+//   } else if (request.url === "/delete-user") {
+//     fs.unlinkSync("./user.txt");
+//     response.end("user deleted");
+//   } else {
+//     response.end(`${request.url} is not a valid api`);
+//   }
+// });
+
+// server.listen(process.env.PORT, () =>
+//   console.log(`server running on localhost:${process.env.PORT}`),
+// );
+
+
+import { dummyApi } from "./config.js"; 
 import dotenv from "dotenv";
-import http from "http";
 import fs from "fs";
-
 dotenv.config();
+import express from "express"
+const app = express()
+const PORT = process.env.PORT
+app.listen(PORT, ()=>console.log(`Server is running on lovalhost:${PORT}`))
 
+app.get("/" , (request , response)=>{
+response.end(`Express Server running..`)
+})
 
+app.get("/api" , (request , response)=>{
 
-const server = http.createServer((request, response) => {
-  if (request.url===  "/") {
-    response.end("Server running..");
-  } else if (request.url === "/create-user") {
-    response.end("User created..");
-    // console.log(userObj);
-let userObj = {
-  email: "mustafa@gmail.com",
-  password: 123456,
-};
-    fs.writeFileSync("./user.txt", JSON.stringify(userObj));
-  } else if (request.url === "/read-user") {
-if(!fs.existsSync("./user.txt")){
-response.end("user nhi hai koi bhi")
-return
-}
+response.send(dummyApi)
+})
 
-    const readUser = fs.readFileSync("./user.txt", "utf-8");
-    response.end(readUser);
-  } else if (request.url === "/update-user") {
-let userObj = {
-  email: "shafay@gmail.com",
-  password: 123456,
-};
-    fs.writeFileSync("./user.txt", JSON.stringify(userObj));
-    response.end("user updated");
-  } else if (request.url === "/delete-user") {
-    fs.unlinkSync("./user.txt");
-    response.end("user deleted");
-  } else {
-    response.end(`${request.url} is not a valid api`);
-  }
-});
-
-server.listen(process.env.PORT, () =>
-  console.log(`server running on localhost:${process.env.PORT}`),
-);
+app.get("/company" , (request , response)=>{
+response.send("Aplinode Company hai tech ki")
+})
